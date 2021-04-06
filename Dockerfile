@@ -26,5 +26,8 @@ ENV TELEGRAM_BOT_TOKEN=TELEGRAM_BOT_TOKEN
 ENV TELEGRAM_USER_ID=TELEGRAM_USER_ID
 ENV CIAN_LINK=https://www.cian.ru/snyat-kvartiru-1-komn-ili-2-komn/
 
-
+FROM base as dev
 CMD ["npm", "run", "dev"]
+
+FROM base as prod
+CMD ["npm", "run", "prod"]

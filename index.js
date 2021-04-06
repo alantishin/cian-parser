@@ -7,7 +7,9 @@ const timestep = parseInt(process.env.TIME_STEP) * 1000 || 3000
 
 const link =  process.env.CIAN_LINK
 
-setTimeout(async () => {
+setInterval(async () => {
+    console.log('[onInterval]')
+
     const links = await ParsePage({
         link: link
     })
