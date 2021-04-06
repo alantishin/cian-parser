@@ -1,4 +1,4 @@
-# cian-parser
+# rent home faster
 
 Parses ads for housing for rent and sends them through the Telegram bot
 
