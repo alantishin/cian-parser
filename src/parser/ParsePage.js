@@ -5,10 +5,11 @@ const { parseInt } = require('lodash');
 
 const testRes = require.main.require('./mock/links.json')
 
-const link = 'https://www.cian.ru/cat.php?currency=2&deal_type=rent&engine_version=2&location%5B0%5D=191974&maxprice=30000&minprice=25000&offer_type=flat&room1=1&room2=1&type=4'
 
-module.exports = async function () {
+module.exports = async function (params) {
     return testRes;
+
+    const { link, timeout } = params
 
     const browser = await puppeteer.launch({
         args: [
@@ -21,20 +22,14 @@ module.exports = async function () {
 
     await page.goto(link, {
         waitUntil: 'load', 
-        timeout: 90000
+        timeout: timeout || 90000
     });
 
     const links = await page.evaluate(injectFunction);
 
     await browser.close();
 
-    const res = processLinks(links);
-
-    console.log(JSON.stringify(res));
-
-    
-
-    return res;
+    return processLinks(links);
 }
 
 const injectFunction = function () {
