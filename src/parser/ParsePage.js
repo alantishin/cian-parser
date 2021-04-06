@@ -7,8 +7,6 @@ const testRes = require.main.require('./mock/links.json')
 
 
 module.exports = async function (params) {
-    return testRes;
-
     const { link, timeout } = params
 
     const browser = await puppeteer.launch({
