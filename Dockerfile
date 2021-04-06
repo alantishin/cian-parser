@@ -21,5 +21,8 @@ RUN npm install && npm cache clean --force
 COPY --chown=node:node . .
 
 
+ENV TELEGRAM_BOT_TOKEN=TELEGRAM_BOT_TOKEN
+ENV TELEGRAM_USER_ID=TELEGRAM_USER_ID
+
 
 CMD ["npm", "run", "dev"]
