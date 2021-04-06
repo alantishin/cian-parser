@@ -1,17 +1,11 @@
-const puppeteer = require('puppeteer');
+const ParsePage = require('./src/parser/ParsePage')
 
-(async () => {
-  const browser = await puppeteer.launch({
-    args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox'
-    ],
-  });
-  const page = await browser.newPage();
-  page.setViewport({ width: 1024, height: 768 });
-  await page.goto('https://www.cian.ru/');
-  await page.screenshot({ path: 'example.png' });
+const timestep = parseInt(process.env.TIME_STEP) * 1000 || 3000
 
 
-  await browser.close();
-})();
+setTimeout(() => {
+    console.log('parse')
+
+    ParsePage()
+
+}, timestep)
