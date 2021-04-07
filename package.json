@@ -1,5 +1,5 @@
 {
-  "name": "cian-parser",
+  "name": "rent-an-apartment-faster",
   "version": "1.0.0",
   "description": "Cian parsers + telegram bot",
   "main": "index.js",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alantishin/cian-parser.git"
+    "url": "git+https://github.com/alantishin/crent-an-apartment-faster.git"
   },
   "keywords": [
     "cian",
@@ -29,7 +29,7 @@
   "author": "Alan Tishin",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/alantishin/cian-parser/issues"
+    "url": "https://github.com/alantishin/rent-an-apartment-faster/issues"
   },
-  "homepage": "https://github.com/alantishin/cian-parser#readme"
+  "homepage": "https://github.com/alantishin/rent-an-apartment-faster#readme"
 }
