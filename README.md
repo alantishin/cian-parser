@@ -1,4 +1,4 @@
-# rent home faster
+# rent an apartment faster
 
 Parses ads for housing for rent and sends them through the Telegram bot. To be the first caller.
 
