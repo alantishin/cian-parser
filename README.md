@@ -1,6 +1,7 @@
 # rent an apartment faster
 
 Parses ads for housing for rent and sends them through the Telegram bot. To be the first caller.
+Parses only one page specified in env. You should set desceding created at order.
 
 ## environment
 - TIME_STEP Interval between requests in seconds, default = 30
