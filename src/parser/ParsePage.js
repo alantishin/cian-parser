@@ -69,11 +69,18 @@ const injectFunction = function () {
     var cards = document.querySelectorAll('article[data-name="CardComponent"]');
     var hrefs = [];
 
-    cards.forEach(function (el) { 
+    for(const el of cards) {
+        is_suggestion = el.closest('div[data-name="Suggestions"]')
+
+        if(is_suggestion) {
+            continue
+        }
+
         var linkArea = el.querySelector('div [data-name="LinkArea"]'); 
-        var a = linkArea.querySelector('a'); 
+        var a = linkArea.querySelector('a');
+
         hrefs.push(a.href);
-    })
+    }
 
     return hrefs
 }
