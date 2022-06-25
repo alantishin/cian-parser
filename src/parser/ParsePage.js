@@ -3,18 +3,53 @@ const _toNumber = require('lodash/toNumber')
 const _isNumber = require('lodash/isNumber');
 const { parseInt } = require('lodash');
 
-const testRes = require.main.require('./mock/links.json')
+
+var browser = null
 
 
-module.exports = async function (params) {
-    const { link, timeout } = params
+const getBrowser = async function() {
+    if (browser) {
+        return browser
+    }
 
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox'
         ],
     });
+
+    return browser
+}
+
+const exitHandler = async function() {
+    console.log('exit')
+    if (browser) {
+        await browser.close();
+        browser = null
+        console.log('browser closed')
+    }
+}
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null,{cleanup:true}));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+// catches "kill pid" (for example: nodemon restart)
+process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
+process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+
+
+module.exports = async function (params) {
+    const { link, timeout } = params
+
+    const browser = await getBrowser()
+
     const page = await browser.newPage();
     page.setViewport({ width: 1024, height: 768 });
 
@@ -25,7 +60,7 @@ module.exports = async function (params) {
 
     const links = await page.evaluate(injectFunction);
 
-    await browser.close();
+    await page.close()
 
     return processLinks(links);
 }
