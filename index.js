@@ -7,24 +7,39 @@ const timestep = parseInt(process.env.TIME_STEP) * 1000 || 3000
 
 const link =  process.env.CIAN_LINK
 
-setInterval(async () => {
-    console.log('[onInterval]')
+const init = async function() {
+    const user_ids = process.env.TELEGRAM_USER_IDS.split(',')
 
-    const links = await ParsePage({
-        link: link
-    })
-
-    const newLinks = await Storage.filterNew({
-        links: links
-    })
-
-    newLinks.map(async (el) => {
-        await Bot.sendMessage({
-            token: process.env.TELEGRAM_BOT_TOKEN,
-            user_id: process.env.TELEGRAM_USER_ID,
-            text: el.fullLink
+    setInterval(async () => {
+        console.log('[onInterval]')
+    
+        const links = await ParsePage({
+            link: link
+        })
+    
+        const newLinks = await Storage.filterNew({
+            links: links
         })
 
-        await Storage.saveNew(el);
+        console.log(`parsed ${newLinks.length} new items`)
+    
+        for(const el of newLinks) {
+            await Storage.saveNew(el);
+    
+            for( const user_id of user_ids) {
+                pushAdv(el, user_id)
+            }
+        }
+    }, timestep)
+}
+
+init()
+
+
+const pushAdv = async function(link, user_id) {
+    await Bot.sendMessage({
+        token: process.env.TELEGRAM_BOT_TOKEN,
+        user_id: user_id,
+        text: link.fullLink
     })
-}, timestep)
+}

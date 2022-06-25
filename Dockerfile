@@ -1,4 +1,4 @@
-FROM node:14.16-stretch as base
+FROM node:14.16-stretch-slim as base
 
 RUN  apt-get update \
      && apt-get install -y wget gnupg ca-certificates procps libxss1 \
@@ -22,8 +22,8 @@ COPY --chown=node:node . .
 
 
 ENV TIME_STEP=30
-ENV TELEGRAM_BOT_TOKEN=TELEGRAM_BOT_TOKEN
-ENV TELEGRAM_USER_ID=TELEGRAM_USER_ID
+ENV TELEGRAM_BOT_TOKEN=''
+ENV TELEGRAM_USER_IDS=''
 ENV CIAN_LINK=https://www.cian.ru/snyat-kvartiru-1-komn-ili-2-komn/
 
 FROM base as dev
