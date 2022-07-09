@@ -107,10 +107,13 @@ const init = async function () {
 init()
 
 
-const pushAdv = async function (link, user_id) {
+const pushAdv = async function (post, user_id) {
     await Bot.sendMessage({
         token: process.env.TELEGRAM_BOT_TOKEN,
         user_id: user_id,
-        text: link.fullLink
+        text: `${post.id} 
+${post.title}
+${post.price}
+${post.url}`
     })
 }

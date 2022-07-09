@@ -74,7 +74,7 @@ module.exports = async function (params) {
 
 const injectFunction = function () {
     var cards = document.querySelectorAll('article[data-name="CardComponent"]');
-    var hrefs = [];
+    var posts = [];
 
     for(const el of cards) {
         is_suggestion = el.closest('div[data-name="Suggestions"]')
@@ -86,18 +86,24 @@ const injectFunction = function () {
         var linkArea = el.querySelector('div [data-name="LinkArea"]'); 
         var a = linkArea.querySelector('a');
 
-        hrefs.push(a.href);
+        posts.push({
+            title: el.querySelector('[data-mark="OfferTitle"]').innerText,
+            price: el.querySelector('[data-mark="MainPrice"]').innerText,
+            url: a.href
+        });
     }
 
-    return hrefs
+    return posts
 }
 
-const processLinks = function(links) {
-    return links.map(el => {
-        const id = getIdfromLink(el)
+const processLinks = function(posts) {
+    return posts.map(post => {
+        const id = getIdfromLink(post.url)
     
         return {
-            fullLink: el,
+            url: post.url,
+            title: post.title,
+            price: post.price,
             id: id ? parseInt(id) : null
         }
     })
