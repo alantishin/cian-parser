@@ -1,66 +1,72 @@
 const puppeteer = require('puppeteer');
 const _toNumber = require('lodash/toNumber')
-const _isNumber = require('lodash/isNumber');
 const { parseInt } = require('lodash');
 
 
-var browser = null
-
-
 const getBrowser = async function() {
-    if (browser) {
-        return browser
-    }
-
-    browser = await puppeteer.launch({
+    const browser = await puppeteer.launch({
         args: [
             '--no-sandbox',
-            '--disable-setuid-sandbox'
+            '--disable-setuid-sandbox',
+            // '--proxy-server=192.252.215.5:16137',
+            '--ignore-certificate-errors'
         ],
     });
 
     return browser
 }
 
-const exitHandler = async function() {
-    console.log('exit')
-    if (browser) {
-        await browser.close();
-        browser = null
-        console.log('browser closed')
-    }
+
+const wait = function(timeout_ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(true)
+        }, timeout_ms)
+    })
 }
-
-//do something when app is closing
-process.on('exit', exitHandler.bind(null,{cleanup:true}));
-
-//catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
-
-// catches "kill pid" (for example: nodemon restart)
-process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
-process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
-
-//catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 
 
 module.exports = async function (params) {
     const { link, timeout } = params
 
+    console.log('get brower')
     const browser = await getBrowser()
 
+
+    console.log('new page')
     const page = await browser.newPage();
+
+
+    await page.setExtraHTTPHeaders({
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Accept-language': 'ru-RU',
+    })
+
+
     page.setViewport({ width: 1024, height: 768 });
 
+    console.log('page goto')
     await page.goto(link, {
-        waitUntil: 'load', 
+        waitUntil: 'networkidle0', 
         timeout: timeout || 90000
     });
 
+    console.log('page wait')
+    await wait(5 * 1000)
+
+
+    console.log('page screenshot')
+    await page.screenshot({path: './screenshots/last_screen.png'});
+
+
+    console.log('page get links')
     const links = await page.evaluate(injectFunction);
 
     await page.close()
+    await browser.close();
 
     return processLinks(links);
 }

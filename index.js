@@ -1,3 +1,4 @@
+const _random = require('lodash/random')
 const ParsePage = require('./src/parser/ParsePage')
 const Storage = require('./src/storage/Storage')
 const Bot = require('./src/bot/Bot')
@@ -7,12 +8,20 @@ const timestep = parseInt(process.env.TIME_STEP) * 1000 || 3000
 
 const link =  process.env.CIAN_LINK
 
+const wait = function(timeout_ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(true)
+        }, timeout_ms)
+    })
+}
+
 const init = async function() {
     const user_ids = process.env.TELEGRAM_USER_IDS.split(',')
 
-    setInterval(async () => {
-        console.log('[onInterval]')
-    
+    while(true) {
+        console.log('iteration started')
+
         const links = await ParsePage({
             link: link
         })
@@ -20,7 +29,7 @@ const init = async function() {
         const newLinks = await Storage.filterNew({
             links: links
         })
-
+    
         console.log(`parsed ${newLinks.length} new items`)
     
         for(const el of newLinks) {
@@ -30,7 +39,12 @@ const init = async function() {
                 pushAdv(el, user_id)
             }
         }
-    }, timestep)
+
+        console.log('iteration ending')
+
+        // random timestamp
+        await wait(timestep + (_random(5, 15) * 1000))
+    }
 }
 
 init()

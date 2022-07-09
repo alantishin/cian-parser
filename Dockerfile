@@ -1,4 +1,4 @@
-FROM node:14.16-stretch-slim as base
+FROM node:16-stretch-slim as base
 
 RUN  apt-get update \
      && apt-get install -y wget gnupg ca-certificates procps libxss1 \
