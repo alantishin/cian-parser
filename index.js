@@ -29,39 +29,23 @@ const readVpnsList = function (dir) {
         })
 }
 
-const activateVpn = function (filepath) {
-    const command = `openvpn --daemon --config '${filepath}'`
-
-    return new Promise((resolve, reject) => {
+const runCommand = function (command) {
+    return new Promise((resolve, _) => {
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
-                return reject(error)
+                return resolve(error)
             }
             if (stderr) {
                 console.log(`stderr: ${stderr}`);
-                return reject(stderr)
+                return resolve(stderr)
             }
             return resolve(stdout)
         });
     })
 }
 
-const stopVpn = function () {
-    return new Promise((resolve, reject) => {
-        exec("killall openvpn", (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-                return reject(error)
-            }
-            if (stderr) {
-                console.log(`stderr: ${stderr}`);
-                return reject(stderr)
-            }
-            return resolve(stdout)
-        });
-    })
-}
+
 
 const init = async function () {
     vpns = readVpnsList('./openvpn')
@@ -76,7 +60,7 @@ const init = async function () {
 
         console.log(`vpn selected ${vpns[vpnIndex]}`)
 
-        await activateVpn(vpns[vpnIndex])
+        await runCommand(`openvpn --daemon --config '${vpns[vpnIndex]}'`)
 
         const links = await ParsePage({
             link: link
@@ -100,7 +84,12 @@ const init = async function () {
 
         // random timestamp
         await wait(timestep + (_random(5, 15) * 1000))
-        await stopVpn()
+        await runCommand('killall openvpn')
+        await runCommand('killall chrome')
+        await runCommand(`pkill -9 -f 'openvpn*'`)
+        await runCommand(`pkill -9 -f 'chrome*'`)
+
+         
     }
 }
 
