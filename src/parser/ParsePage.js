@@ -1,3 +1,4 @@
+const _random = require('lodash/random')
 const puppeteer = require('puppeteer');
 const _toNumber = require('lodash/toNumber')
 const { parseInt } = require('lodash');
@@ -55,7 +56,7 @@ module.exports = async function (params) {
     });
 
     console.log('page wait')
-    await wait(5 * 1000)
+    await wait(_random(5, 15) * 1000)
 
 
     console.log('page screenshot')
