@@ -28,6 +28,7 @@ ENV TELEGRAM_USER_IDS=''
 ENV CIAN_LINK=https://www.cian.ru/snyat-kvartiru-1-komn-ili-2-komn/
 
 FROM base as dev
+RUN npm install -g nodemon
 CMD ["npm", "run", "dev"]
 
 FROM base as prod

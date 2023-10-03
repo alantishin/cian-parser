@@ -19,16 +19,6 @@ const wait = function (timeout_ms) {
     })
 }
 
-const readVpnsList = function (dir) {
-    return fs.readdirSync(dir)
-        .filter(el => {
-            return el.includes('.ovpn')
-        })
-        .map(el => {
-            return path.resolve(path.join(dir, el));
-        })
-}
-
 const runCommand = function (command) {
     return new Promise((resolve, _) => {
         exec(command, (error, stdout, stderr) => {
@@ -48,19 +38,10 @@ const runCommand = function (command) {
 
 
 const init = async function () {
-    vpns = readVpnsList('./openvpn')
-
-
     const user_ids = process.env.TELEGRAM_USER_IDS.split(',')
 
     while (true) {
         console.log('iteration started')
-
-        vpnIndex = _random(0, vpns.length - 1)
-
-        console.log(`vpn selected ${vpns[vpnIndex]}`)
-
-        await runCommand(`openvpn --daemon --config '${vpns[vpnIndex]}'`)
 
         const links = await ParsePage({
             link: link
@@ -84,12 +65,6 @@ const init = async function () {
 
         // random timestamp
         await wait(timestep + (_random(5, 15) * 1000))
-        await runCommand('killall openvpn')
-        await runCommand('killall chrome')
-        await runCommand(`pkill -9 -f 'openvpn*'`)
-        await runCommand(`pkill -9 -f 'chrome*'`)
-
-         
     }
 }
 
