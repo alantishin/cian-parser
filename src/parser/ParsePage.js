@@ -10,8 +10,9 @@ const getBrowser = async function() {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             // '--proxy-server=192.252.215.5:16137',
-            '--ignore-certificate-errors'
+            '--ignore-certificate-errors',
         ],
+        ignoreDefaultArgs: ['--disable-extensions']
     });
 
     return browser
